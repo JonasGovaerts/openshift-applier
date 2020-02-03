@@ -35,15 +35,14 @@ def gitClone():
 	  log("Cloned git repositry successfully in /resources/git")
 	except:
 	  log("Something went wrong")
-	  
 
 def gitPull():
 	try:
 	  log("Pulling new updates from git...")
-	  command = "git --work-tree=/resources/git/ --git-dir=/resources/git/.git pull origin"+branch
+	  command = "git --work-tree=/resources/git/ --git-dir=/resources/git/.git pull origin "+branch
 	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = output.communicate()
-	  if "Already" in pullResult:
+	  if "Already" in stdout:
 	    log("No new changes were found")
 	  else:
 	    log("Pulled latest changes from the git repo "+repo)
