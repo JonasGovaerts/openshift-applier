@@ -37,7 +37,7 @@ def gitDefinition():
 def gitClone():
 	try:
 	  log("Cloning git repository "+repo+" into /resources/git")
-	  command = "https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch
+	  command = "git clone https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch
 	  log(command)
 	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = output.communicate()
