@@ -83,6 +83,7 @@ def log(logMessage):
 #### Application Run time #####
 log("openshift-applier is starting...")
 time.sleep(3)
+initVars()
 gitDefinition()
 gitClone()
 
