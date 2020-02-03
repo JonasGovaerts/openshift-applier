@@ -5,9 +5,24 @@ import time
 import subprocess
 from datetime import datetime
 
-sleep = float(os.environ['TIMER'])
-repo = os.environ['GITREPO']
-branch = os.environ['BRANCH']
+def initVars():
+	try:
+	  log("Initializing variables")
+	  username = os.environ['USERNAME']
+	  password = os.environ['PASSWORD']
+	  repo = os.environ['GITREPO'].split('https://')[1]
+	  branch = os.environ['BRANCH']
+	  sleep = float(os.environ['TIMER'])
+	except:
+	  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
+
+def pause():
+	try:
+	  log("sleeping for "+sleep+" seconds")
+	  time.sleep(sleep)
+	except:
+	  log("sleeping for 60 seconds")
+	  time.sleep(60)
 
 def gitDefinition():
 	try:
@@ -21,7 +36,7 @@ def gitDefinition():
 def gitClone():
 	try:
 	  log("Cloning git repository "+repo+" into /resources/git")
-  	  command = "echo $GITREPO | awk -F 'https://' -v a=$USERNAME -v b=$PASSWORD -v c='git clone https://' -v d=':' -v e='@'  -v f=' /resources/git -b ' -v g=$BRANCH '{print c a d b e $2 f g}'"
+	  command = "https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch
 	  output = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE)
 	  clone = output.stdout.read()
 	  subprocess.call([clone], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -74,10 +89,4 @@ gitClone()
 while True:
   gitPull()
   ocApply()
-  
-  try:
-    log("sleeping for "+sleep+" seconds")
-    time.sleep(sleep)
-  except:
-    log("sleeping for 60 seconds")
-    time.sleep(60)
+  pause() 
