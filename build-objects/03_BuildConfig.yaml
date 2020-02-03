@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: namespace-applier
+  name: namespace-applier
+  namespace: openshift-cluster-applier
+spec:
+  output:
+    to:
+      kind: "DockerImage"
+      name: "docker.io/govaertsjonas/openshift-applier:latest"
+    pushSecret:
+      name: "push-secret-docker"
+  resources: {}
+  source:
+    git:
+      ref: development
+      uri: git@gitlab.com:jonasgovaerts/ocp_namespace-applier.git
+    sourceSecret:
+      name: gitsecret
+      type: Git
+    contextDir: build/
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: ubi7:latest
+        namespace: openshift-cluster-applier
+    type: Docker
+  triggers:
+  - type: "imageChange" 
+    imageChange:
+      from:
+        kind: "ImageStreamTag"
+        name: "ubi7:latest"
+  - type: "ConfigChange"
