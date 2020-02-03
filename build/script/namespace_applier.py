@@ -5,21 +5,9 @@ import time
 import subprocess
 from datetime import datetime
 
-def initVars():
-	try:
-	  log("Initializing variables")
-	  username = os.environ['USERNAME']
-	  password = os.environ['PASSWORD']
-	  repo = os.environ['GITREPO'].split('https://')[1]
-	  branch = os.environ['BRANCH']
-	  sleep = float(os.environ['TIMER'])
-	  subdir = os.environ['DIR']
-	except:
-	  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
-
 def pause():
 	try:
-	  log("sleeping for "+sleep+" seconds")
+	  log("sleeping for " + sleep + " seconds")
 	  time.sleep(sleep)
 	except:
 	  log("sleeping for 60 seconds")
@@ -37,7 +25,10 @@ def gitDefinition():
 def gitClone():
 	try:
 	  log("Cloning git repository "+repo+" into /resources/git")
-	  command = "git clone https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch
+	  if "github" not in repo:
+  	    command = "git clone https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch+" /resources/git"
+	  else:
+	    command = "git clone https://"+repo+" --single-branch -b "+branch+" /resources/git"
 	  log(command)
 	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = output.communicate()
@@ -83,7 +74,16 @@ def log(logMessage):
 #### Application Run time #####
 log("openshift-applier is starting...")
 time.sleep(3)
-initVars()
+try:
+  log("Initializing variables")
+  username = os.environ['USERNAME']
+  password = os.environ['PASSWORD']
+  repo = os.environ['GITREPO'].split('https://')[1]
+  branch = os.environ['BRANCH']
+  sleep = float(os.environ['TIMER'])
+  subdir = os.environ['DIR']
+except:
+  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
 gitDefinition()
 gitClone()
 
