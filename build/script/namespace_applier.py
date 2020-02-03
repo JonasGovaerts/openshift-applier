@@ -13,6 +13,7 @@ def initVars():
 	  repo = os.environ['GITREPO'].split('https://')[1]
 	  branch = os.environ['BRANCH']
 	  sleep = float(os.environ['TIMER'])
+	  subdir = os.environ['DIR']
 	except:
 	  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
 
@@ -37,9 +38,8 @@ def gitClone():
 	try:
 	  log("Cloning git repository "+repo+" into /resources/git")
 	  command = "https://"+username+":"+password+"@"+repo+" --single-branch -b "+branch
-	  output = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE)
-	  clone = output.stdout.read()
-	  subprocess.call([clone], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	  stdout,stderr = output.communicate()
 	  log("Cloned git repositry successfully in /resources/git")
 	except:
 	  log("Something went wrong")
@@ -50,14 +50,13 @@ def gitPull():
 	  log("Pulling new updates from git...")
 	  command = "git --work-tree=/resources/git/ --git-dir=/resources/git/.git pull origin"+branch
 	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	  pullResult,stderr = output.communicate()
+	  stdout,stderr = output.communicate()
 	  if "Already" in pullResult:
 	    log("No new changes were found")
 	  else:
 	    log("Pulled latest changes from the git repo "+repo)
 	except:
-	  pullResult,stderr = output.communicate()
-	  log("stderr")
+	  log("Couldn't pull new updates from git")
 
 def ocApply():
 	try:

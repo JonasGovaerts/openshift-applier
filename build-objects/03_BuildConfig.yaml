@@ -16,7 +16,7 @@ spec:
   source:
     git:
       ref: development
-      uri: git@gitlab.com:jonasgovaerts/ocp_namespace-applier.git
+      uri: https://github.com/JonasGovaerts/openshift-applier.git
     sourceSecret:
       name: gitsecret
       type: Git

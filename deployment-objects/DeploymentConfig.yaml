@@ -25,13 +25,13 @@ spec:
         deploymentconfig: openshift-applier
     spec:
       containers:
-      - image: :latest
+      - image: 172.30.1.1:5000/openshift-cluster-applier/openshift-applier:latest
         imagePullPolicy: Always
         name: openshift-applier
         terminationMessagePath: /dev/termination-log
         env:
           - name: GITREPO
-            value: 'https://gitlab.com/jonasgovaerts/ocp_namespace-applier.git'
+            value: 'https://github.com/JonasGovaerts/openshift-applier.git'
           - name: BRANCH
             value: development
           - name: USERNAME

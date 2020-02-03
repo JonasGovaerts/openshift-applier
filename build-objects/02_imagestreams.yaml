@@ -3,11 +3,23 @@ items:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
+    annotations:
     name: openshift-applier
     namespace: openshift-cluster-applier
   spec:
     lookupPolicy:
       local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker.io/govaertsjonas/openshift-applier
+      generation: 1
+      importPolicy:
+        scheduled: true
+      name: latest
+      referencePolicy:
+        type: Source
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -22,7 +34,7 @@ items:
       from:
         kind: DockerImage
         name: registry.access.redhat.com/ubi7/ubi
-      generation: 1
+      generation: 6
       importPolicy:
         scheduled: true
       name: latest
