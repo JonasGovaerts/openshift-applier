@@ -17,9 +17,6 @@ spec:
     git:
       ref: development
       uri: https://github.com/JonasGovaerts/openshift-applier.git
-    sourceSecret:
-      name: gitsecret
-      type: Git
     contextDir: build/
     type: Git
   strategy:

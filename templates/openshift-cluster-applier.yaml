@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   name: openshift-cluster-applier
-  namespace: openshift
+  namespace: default
   annotations:
     description: "The openshift-cluster-applier is a service that continuously checks a git repository for new K8S objects and applies them with the oc client.\n\nThis template is designed to deploy all needed items for the openshift-cluster-applier to work. Based on the idea of the box/kube-applier, the openshift-cluster-applier runs as a Pod in your cluster and applies .yaml, .yml and .json files. A default interval has been specified to 60 seconds but this can be modified as you wish.\n\n Documentation and source code can be found on https://github.com/JonasGovaerts/openshift-applier"
     iconClass: "icon-openshift"
