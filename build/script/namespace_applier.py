@@ -82,10 +82,12 @@ try:
   subdir = os.environ['DIR']
 except:
   log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
+
 gitDefinition()
 gitClone()
 
 while True:
   gitPull()
   ocApply()
-  pause() 
+  pause()
+  print()
