@@ -1,0 +1,158 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: openshift-cluster-applier
+  namespace: openshift
+  annotations:
+    description: "The openshift-cluster-applier is a service that continuously checks a git repository for new K8S objects and applies them with the oc client.\n\nThis template is designed to deploy all needed items for the openshift-cluster-applier to work. Based on the idea of the box/kube-applier, the openshift-cluster-applier runs as a Pod in your cluster and applies .yaml, .yml and .json files. A default interval has been specified to 60 seconds but this can be modified as you wish.\n\n Documentation and source code can be found on https://github.com/JonasGovaerts/openshift-applier"
+    iconClass: "icon-openshift"
+objects:
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    app: openshift-cluster-applier
+    name: openshift-cluster-applier
+    namespace: default
+  stringData:
+     username: ${USERNAME}
+     password: ${PASSWORD}
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
+    annotations:
+    name: openshift-cluster-applier
+    namespace: default
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: docker.io/govaertsjonas/openshift-applier
+      importPolicy:
+        scheduled: true
+      name: latest
+      referencePolicy:
+        type: Source
+- kind: ServiceAccount
+  apiVersion: v1
+  metadata:
+    app: openshift-cluster-applier
+    name: openshift-cluster-applier
+    namespace: default
+- kind: RoleBinding
+  apiVersion: authorization.openshift.io/v1
+  groupNames: null
+  metadata:
+    app: openshift-cluster-applier
+    name: openshift-cluster-applier
+    namespace: default
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: openshift-cluster-applier
+- kind: ClusterRoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: openshift-cluster-applier
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cluster-admin
+  subjects:
+  - kind: ServiceAccount
+    name: openshift-cluster-applier
+    namespace: default
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    labels:
+      app: openshift-cluster-applier
+    name: openshift-cluster-applier
+    namespace: default
+  spec:
+    replicas: 1
+    selector:
+      app: openshift-cluster-applier
+      deploymentconfig: openshift-cluster-applier
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: openshift-cluster-applier
+          deploymentconfig: openshift-cluster-applier
+      spec:
+        containers:
+        - image: docker.io/govaertsjonas/openshift-applier:latest
+          imagePullPolicy: Always
+          name: openshift-cluster-applier
+          terminationMessagePath: /dev/termination-log
+          env:
+            - name: GITREPO
+              value: ${REPOSITORY}
+            - name: BRANCH
+              value: ${BRANCH}
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: openshift-cluster-applier
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: openshift-cluster-applier
+            - name: TIMER
+              value: ${TIMER}
+            - name: DIR
+              value: ${DIR}
+          volumeMounts:
+            - name: git
+              mountPath: "/resources"
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        serviceAccount: openshift-cluster-applier
+        serviceAccountName: openshift-cluster-applier
+        terminationGracePeriodSeconds: 30
+        volumes:
+          - emptyDir: {}
+            name: git
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - openshift-cluster-applier
+        from:
+          kind: ImageStreamTag
+          name: openshift-cluster-applier:latest
+      type: ImageChange
+parameters:
+- description: Repository
+  name: REPOSITORY
+  value: 'https://github.com/JonasGovaerts/openshift-applier.git'
+  required: true
+- description: Git username
+  name: USERNAME
+- description: Git password
+  name: PASSWORD
+- description: Branch
+  name: BRANCH
+  value: 'development'
+- description: Interval to poll git
+  name: TIMER
+  value: '60'
+- description: Subdirectory
+  name: DIR
+  value: '/'
