@@ -51,8 +51,7 @@ def gitPull():
 
 def ocApply():
 	try:
-	  subdir = os.environ['DIR']
-	  findCMD = 'find /resources/git/'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
+	  findCMD = 'find /resources/git'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
 	  out = subprocess.Popen(findCMD, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = out.communicate()
 	  filelist = stdout.decode().split()
@@ -62,7 +61,7 @@ def ocApply():
 	    subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	    log("applied object "+x)
 	except:
-	  log("Something went wrong, are there objects available in /resources/git/"+subdir)
+	  log("Something went wrong, are there iany objects available in /resources/git/"+subdir)
 
 def log(logMessage):
 	now = datetime.now()
