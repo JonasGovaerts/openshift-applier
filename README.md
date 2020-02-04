@@ -6,7 +6,7 @@ The openshift-applier is a service that continuously checks a git repository for
 
 Based on the idea of the [box/kube-applier](https://github.com/box/kube-applier), the openshift-applier runs as a Pod in your cluster and applies .yaml, .yml and .json files.
 
-##Copyright and License
+## Copyright and License
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
 [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
