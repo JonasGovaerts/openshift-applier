@@ -58,8 +58,9 @@ def ocApply():
 
 	  for x in filelist:
 	    command = 'oc apply -f '+x
-	    subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	    log("applied object "+x)
+	    output= subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	    stdout,stderr = output.communicate()
+	    log("stdout")
 	except:
 	  log("Something went wrong, are there iany objects available in /resources/git/"+subdir)
 
