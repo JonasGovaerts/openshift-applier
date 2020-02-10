@@ -11,6 +11,4 @@ WORKDIR /usr/src/app
 
 COPY ["./script/namespace_applier.py", "/usr/src/app"]
 
-USER 1001
-
 ENTRYPOINT ["python", "-u", "./namespace_applier.py"]
