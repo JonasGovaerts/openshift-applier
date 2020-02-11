@@ -13,6 +13,6 @@ COPY ["./script/namespace_applier.py", "/usr/src/app"]
 
 RUN mkdir -p /resources
 
-RUN chgrp -R 0 / && chmod -R g=u / && chgrp -R 0 /usr/src/app && chmod -R g=u /usr/src/app && chgrp -R 0 /resources && chmod -R g=u /resources
+RUN chgrp -R 0 /root && chmod -R g=u /root && chgrp -R 0 /usr/src/app && chmod -R g=u /usr/src/app && chgrp -R 0 /resources && chmod -R g=u /resources
 
 ENTRYPOINT ["python", "-u", "./namespace_applier.py"]
