@@ -34,7 +34,7 @@ def gitClone():
 	  stdout,stderr = output.communicate()
 	  log("Cloned git repositry successfully in /resources/git")
 	except:
-	  log("Something went wrong")
+	  log("Something went wrong, could not clone git repository")
 
 def gitPull():
 	try:
@@ -54,15 +54,13 @@ def ocApply():
 	  findCMD = 'find /resources/git'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
 	  out = subprocess.Popen(findCMD, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = out.communicate()
-	  print(stdout)
-	  print(stderr)
 	  filelist = stdout.decode().split()
 
 	  for x in filelist:
 	    command = 'oc apply -f '+x
 	    output= subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	    stdout,stderr = output.communicate()
-	    log(stdout)
+	    log(stdout.rstrip())
 	except:
 	  log("Something went wrong, are there iany objects available in /resources/git/"+subdir)
 
