@@ -60,7 +60,7 @@ def ocApply():
 	    command = 'oc apply -f '+x
 	    output= subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	    stdout,stderr = output.communicate()
-	    log("stdout")
+	    log(stdout)
 	except:
 	  log("Something went wrong, are there iany objects available in /resources/git/"+subdir)
 
