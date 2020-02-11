@@ -9,7 +9,7 @@ RUN wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift
 
 WORKDIR /root
 
-COPY ["./script/namespace_applier.py", "/usr/src/app"]
+COPY ["./script/namespace_applier.py", "/usr/src/app/namespace_applier.py"]
 
 RUN mkdir -p /resources
 
