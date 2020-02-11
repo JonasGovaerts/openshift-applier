@@ -54,6 +54,8 @@ def ocApply():
 	  findCMD = 'find /resources/git'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
 	  out = subprocess.Popen(findCMD, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = out.communicate()
+	  print(stdout)
+	  print(stderr)
 	  filelist = stdout.decode().split()
 
 	  for x in filelist:
@@ -72,7 +74,7 @@ def log(logMessage):
 
 #### Application Run time #####
 log("openshift-applier is starting...")
-time.sleep(3)
+time.sleep(5)
 try:
   log("Initializing variables")
   username = os.environ['USERNAME']
