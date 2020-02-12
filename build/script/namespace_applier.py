@@ -51,7 +51,7 @@ def gitPull():
 
 def ocApply():
 	try:
-	  findCMD = 'find /resources/git'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
+	  findCMD = 'find -L /resources/git'+subdir+' -type f \( -name \*.json -o -name \*.yml -o -name \*.yaml \)'
 	  out = subprocess.Popen(findCMD, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	  stdout,stderr = out.communicate()
 	  filelist = stdout.decode().split()
