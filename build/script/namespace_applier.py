@@ -86,11 +86,6 @@ try:
   subdir = os.environ['DIR']
 except:
   log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
-  log("Initializing default variables"
-  username = ""
-  password = ""
-  branch = "development"
-  subdir = "/"
 
 gitDefinition()
 gitClone()
