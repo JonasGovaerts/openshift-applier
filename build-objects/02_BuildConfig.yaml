@@ -11,7 +11,7 @@ spec:
       kind: "DockerImage"
       name: "docker.io/govaertsjonas/openshift-applier:latest"
     pushSecret:
-      name: "push-secret-docker"
+      name: "docker"
   resources: {}
   source:
     git:
