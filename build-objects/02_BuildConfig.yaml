@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   labels:
@@ -6,30 +6,39 @@ metadata:
   name: namespace-applier
   namespace: openshift-cluster-applier
 spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
   output:
-    to:
-      kind: "DockerImage"
-      name: "docker.io/govaertsjonas/openshift-applier:latest"
     pushSecret:
-      name: "docker"
+      name: docker
+    to:
+      kind: DockerImage
+      name: docker.io/govaertsjonas/openshift-applier:latest
+  postCommit: {}
   resources: {}
+  runPolicy: Serial
   source:
+    contextDir: build
     git:
       ref: development
       uri: https://github.com/JonasGovaerts/openshift-applier.git
-    contextDir: build/
     type: Git
   strategy:
     dockerStrategy:
       from:
         kind: ImageStreamTag
         name: ubi7:latest
-        namespace: openshift-cluster-applier
     type: Docker
+  successfulBuildsHistoryLimit: 5
   triggers:
-  - type: "imageChange" 
-    imageChange:
+  - imageChange:
       from:
-        kind: "ImageStreamTag"
-        name: "ubi7:latest"
-  - type: "ConfigChange"
+        kind: ImageStreamTag
+        name: ubi7:latest
+      lastTriggeredImageID: registry.access.redhat.com/ubi7/ubi@sha256:3e46f7e58c18c890dd555cfc372a25e6caa0dd782ca903f2530b6108f6dc7430
+    type: ImageChange
+  - type: ConfigChange
+  - github:
+      secretReference:
+        name: github
+    type: GitHub
