@@ -35,7 +35,6 @@ spec:
       from:
         kind: ImageStreamTag
         name: ubi7:latest
-      lastTriggeredImageID: registry.access.redhat.com/ubi7/ubi@sha256:3e46f7e58c18c890dd555cfc372a25e6caa0dd782ca903f2530b6108f6dc7430
     type: ImageChange
   - type: ConfigChange
   - github:
