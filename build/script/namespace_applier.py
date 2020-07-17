@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 import os
 import time
 import subprocess
@@ -7,8 +8,9 @@ from datetime import datetime
 
 def pause():
 	try:
-	  log("sleeping for " + sleep + " seconds")
-	  time.sleep(sleep)
+	  log("sleeping for " + timer + " seconds")
+          sleep_timer = float(timer)
+	  time.sleep(sleep_timer)
 	except:
 	  log("sleeping for 60 seconds")
 	  time.sleep(60)
@@ -21,6 +23,7 @@ def gitDefinition():
           log("Initialized dummy git credentials")
 	except:
 	  log("Couldn't initialize dummy git credentials")
+	  sys.exit()
 
 def gitClone():
 	try:
@@ -31,10 +34,15 @@ def gitClone():
 	    command = "git clone https://"+repo+" --single-branch -b "+branch+" /resources/git"
 	  log(command)
 	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+          time.sleep(5)
 	  stdout,stderr = output.communicate()
-	  log("Cloned git repositry successfully in /resources/git")
+	  if stderr.strip():
+            log("Exiting: Could not clone git repository!")
+	    sys.exit()
+          else:
+	    log("Cloned git repositry successfully in /resources/git")
 	except:
-	  log("Something went wrong, could not clone git repository")
+	  sys.exit()
 
 def gitPull():
 	try:
@@ -46,8 +54,13 @@ def gitPull():
 	    log("No new changes were found")
 	  else:
 	    log("Pulled latest changes from the git repo "+repo)
+	  command = "git --work-tree=/resources/git/ --git-dir=/resources/git/.git log --pretty=oneline | head -n 1 | awk '{print $1}'"
+	  output = subprocess.Popen([command], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	  stdout,stderr = output.communicate()
+	  log("Latest commit: "+stdout.strip())
 	except:
 	  log("Couldn't pull new updates from git")
+	  sys.exit()
 
 def ocApply():
 	try:
@@ -65,7 +78,8 @@ def ocApply():
 	    else:
 	      log(stderr.rstrip())
 	except:
-	  log("Something went wrong, are there iany objects available in /resources/git/"+subdir)
+	  log("Something went wrong, are there any objects available in /resources/git/"+subdir)
+	  sys.exit()
 
 def log(logMessage):
 	now = datetime.now()
@@ -82,10 +96,11 @@ try:
   password = os.environ['PASSWORD']
   repo = os.environ['GITREPO'].split('https://')[1]
   branch = os.environ['BRANCH']
-  sleep = float(os.environ['TIMER'])
+  timer = os.environ['TIMER']
   subdir = os.environ['DIR']
 except:
-  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER")
+  log("Couln't initialize needed variables, required variables are: USERNAME, PASSWORD, GITREPO, BRANCH, TIMER, DIR")
+  sys.exit()
 
 gitDefinition()
 gitClone()
