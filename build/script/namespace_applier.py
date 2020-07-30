@@ -84,7 +84,7 @@ def ocApply():
 def log(logMessage):
 	now = datetime.now()
 	dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-	print('{"timestamp"}:{"'+dt_string+'"}'+'{"message"}:{"'+logMessage+'"}')
+	print('{"timestamp":"'+dt_string+'",'+'"message":"'+logMessage+'"}')
 
 
 #### Application Run time #####
