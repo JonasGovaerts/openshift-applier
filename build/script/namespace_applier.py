@@ -109,4 +109,3 @@ while True:
   gitPull()
   ocApply()
   pause()
-  print("\n")
