@@ -5,6 +5,8 @@
 ## Summary
 The openshift-applier is a service that continuously checks a git repository for new K8S objects and applies them with the oc client. The service runs as a Pod in your cluster and applies .yaml, .yml and .json files.
 
+The 3.11 image version has a feature which will query the API for the lastTriggered image status field when the kind of the API object is buildConfig and update the field with this referencee.
+
 ## Requirements
 - `Docker (17.05+)`
 - `Python (>2.7)`
