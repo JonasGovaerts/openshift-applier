@@ -1,0 +1,33 @@
+#!/bin/bash
+
+x="$1"
+
+if  [[ "$x" == *".yaml" ]] || [[ "$x" == *".yml" ]]
+then
+        object=$(yq r $x -j)
+elif [[ "$x" == *".json" ]]
+then
+        object=$(cat $x)
+fi
+
+if [ "$(echo $object | jq -r '.kind')" == "BuildConfig" ]
+then
+        if [ "$(echo $object | jq '.spec.triggers[] | select(.type == "imageChange")')" != "" ]
+        then
+                ## Get needed info to populate object
+                BUILDCONFIG=$(echo $object | jq -r '.metadata.name')
+                NAMESPACE=$(echo $object | jq -r '.metadata.namespace')
+                lastTriggeredImageID=$(oc get bc $BUILDCONFIG -n $NAMESPACE -o jsonpath='{.spec.triggers[?(@.type == "ImageChange")].imageChange.lastTriggeredImageID}')
+ 
+                ## remove field and add it again with complette data
+                object=$(echo $object | jq 'del(.spec.triggers[] | select (.type == "imageChange"))')
+                object=$(echo $object | jq ".spec.triggers += [{\"imageChange\":{\"lastTriggeredImageID\":\"$lastTriggeredImageID\"},\"type\":\"ImageChange\"}]")
+                echo $object | oc apply -f -
+        else
+                echo $object | oc apply -f -
+        fi
+else
+        echo $object | oc apply -f -
+fi
+
+exit 0
