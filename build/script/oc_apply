@@ -12,7 +12,7 @@ fi
 
 if [ "$(echo $object | jq -r '.kind')" == "BuildConfig" ]
 then
-        if [ "$(echo $object | jq '.spec.triggers[] | select(.type == "imageChange")')" != "" ]
+        if echo $object | jq '.spec.triggers[].type' | xargs | grep -i 'imagechange' > /dev/null 2>&1
         then
                 ## Get needed info to populate object
                 BUILDCONFIG=$(echo $object | jq -r '.metadata.name')
