@@ -27,7 +27,7 @@ then
                 echo $object | oc apply -f -
         fi
 else
-        echo $object | oc apply -f -
+        oc apply -f $x
 fi
 
 exit 0
