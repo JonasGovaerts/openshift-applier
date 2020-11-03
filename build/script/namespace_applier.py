@@ -3,6 +3,7 @@ import sys
 import os
 import time
 import subprocess
+import shutil
 from datetime import datetime
 
 def log(logMessage):
@@ -44,6 +45,7 @@ def gitClone():
   except Exception as exception:
     error = str(exception).replace('\n', ' ').replace('\r', '')
     log("Something went wrong: "+error)
+    shutil.rmtree('/resources/git')
     sys.exit()
 
 def gitPull():
